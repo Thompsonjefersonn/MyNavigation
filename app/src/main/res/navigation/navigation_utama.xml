@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_utama"
+    android:label="HOME!"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/detailProfileFragment"
+        android:name="com.example.mynavigation.DetailProfileFragment"
+        android:label="DETAIL!"
+        tools:layout="@layout/fragment_detail_profile" >
+        <argument
+            android:name="dataSatu"
+            app:argType="string"
+            android:defaultValue="-" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.mynavigation.HomeFragment"
+        android:label="HOME!"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.mynavigation.ProfileFragment"
+        android:label="PROFILE!"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_detailProfileFragment"
+            app:destination="@id/detailProfileFragment"
+            app:enterAnim="@android:anim/fade_in" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.example.mynavigation.SettingFragment"
+        android:label="SETTING!"
+        tools:layout="@layout/fragment_setting" />
+</navigation>
