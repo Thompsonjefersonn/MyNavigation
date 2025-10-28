@@ -37,4 +37,10 @@
         android:name="com.example.mynavigation.SettingFragment"
         android:label="SETTING!"
         tools:layout="@layout/fragment_setting" />
+
+    <fragment
+        android:id="@+id/bahanFragment"
+        android:name="com.example.mynavigation.BahanFragment"
+        android:label="BAHAN!"
+        tools:layout="@layout/fragment_bahan"/>
 </navigation>

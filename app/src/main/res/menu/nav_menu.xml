@@ -19,6 +19,11 @@
         android:icon="@drawable/outline_settings_24"
         android:title="SETTING" />
 
+    <item
+        android:id="@+id/bahanFragment"
+        android:icon="@drawable/baseline_menu_book_24"
+        android:title="MENU"/>
+
     <item android:title="CONFIDENTIAL">
         <menu>
             <group android:checkableBehavior="single">
