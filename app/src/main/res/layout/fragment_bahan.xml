@@ -6,13 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ListView
-        android:id="@+id/lvBahan"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvBahan"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="9"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp" />
+        android:layout_weight="9" />
 
     <Button
         android:id="@+id/btnTambahBahan"

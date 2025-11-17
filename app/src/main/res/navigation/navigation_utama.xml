@@ -3,44 +3,51 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_utama"
-    android:label="HOME!"
     app:startDestination="@id/homeFragment">
 
     <fragment
-        android:id="@+id/detailProfileFragment"
-        android:name="com.example.mynavigation.DetailProfileFragment"
-        android:label="DETAIL!"
-        tools:layout="@layout/fragment_detail_profile" >
-        <argument
-            android:name="dataSatu"
-            app:argType="string"
-            android:defaultValue="-" />
-    </fragment>
-    <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.mynavigation.HomeFragment"
-        android:label="HOME!"
+        android:label="HOME"
         tools:layout="@layout/fragment_home" />
+
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.mynavigation.ProfileFragment"
-        android:label="PROFILE!"
+        android:label="PROFILE"
         tools:layout="@layout/fragment_profile" >
         <action
             android:id="@+id/action_profileFragment_to_detailProfileFragment"
-            app:destination="@id/detailProfileFragment"
-            app:enterAnim="@android:anim/fade_in" />
+            app:destination="@id/detailProfileFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/settingFragment"
         android:name="com.example.mynavigation.SettingFragment"
-        android:label="SETTING!"
+        android:label="SETTING"
         tools:layout="@layout/fragment_setting" />
 
     <fragment
         android:id="@+id/bahanFragment"
         android:name="com.example.mynavigation.BahanFragment"
         android:label="BAHAN!"
-        tools:layout="@layout/fragment_bahan"/>
+        tools:layout="@layout/fragment_bahan" />
+
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.example.mynavigation.CartFragment"
+        android:label="KERANJANG"
+        tools:layout="@layout/fragment_cart" />
+
+    <fragment
+        android:id="@+id/detailProfileFragment"
+        android:name="com.example.mynavigation.DetailProfileFragment"
+        android:label="fragment_detail_profile"
+        tools:layout="@layout/fragment_detail_profile" >
+        <argument
+            android:name="dataSatu"
+            app:argType="string"
+            android:defaultValue="-" />
+    </fragment>
+
 </navigation>

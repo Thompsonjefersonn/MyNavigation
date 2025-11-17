@@ -1,119 +1,92 @@
 package com.example.mynavigation
 
+import android.app.AlertDialog
 import android.os.Bundle
-import android.view.GestureDetector
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
-import androidx.appcompat.app.AlertDialog
+import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class BahanFragment : Fragment() {
 
-    private lateinit var lvBahan: ListView
-    private lateinit var btnTambah: Button
+    private lateinit var rvBahan: RecyclerView
+    private lateinit var adapter: BahanAdapter
+    private lateinit var prefs: Prefs
+    private val daftarBahan = mutableListOf<Bahan>()
 
-    // data awal ditaruh sederhana
-    private val data = mutableListOf(
-        "Gula (Bumbu)",
-        "Ayam (Protein)",
-        "Tomat (Sayur)"
-    )
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.fragment_bahan, container, false)
+        rvBahan = view.findViewById(R.id.rvBahan)
+        prefs = Prefs(requireContext())
 
-    private lateinit var adapter: ArrayAdapter<String>
-    private val categories = arrayOf("Sayur", "Buah", "Bumbu", "Protein", "Lainnya")
+        setupRecyclerView()
+        loadData()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_bahan, container, false)
+        view.findViewById<View>(R.id.btnTambahBahan).setOnClickListener { showAddDialog() }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        lvBahan = view.findViewById(R.id.lvBahan)
-        btnTambah = view.findViewById(R.id.btnTambahBahan)
+        return view
+    }
 
-
-        adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, data)
-        lvBahan.adapter = adapter
-
-
-        btnTambah.setOnClickListener { showAddDialog() }
-
-
-        lvBahan.setOnItemClickListener { _, _, position, _ ->
-            Toast.makeText(requireContext(), data[position], Toast.LENGTH_SHORT).show()
+    private fun setupRecyclerView() {
+        adapter = BahanAdapter { bahan ->
+            addToCart(bahan)
         }
+        rvBahan.layoutManager = LinearLayoutManager(requireContext())
+        rvBahan.adapter = adapter
+    }
 
+    private fun loadData() {
+        val savedBahan: MutableList<Bahan> = prefs.getList(Prefs.KEY_BAHAN, Bahan::class.java)
+        if (savedBahan.isNotEmpty()) {
+            daftarBahan.addAll(savedBahan)
+        } else {
+            val initialBahanNames = resources.getStringArray(R.array.initial_bahan_array)
+            val initialBahanList = initialBahanNames.map { Bahan(it, "") } // Empty image url for now
+            daftarBahan.addAll(initialBahanList)
+            prefs.saveList(Prefs.KEY_BAHAN, daftarBahan)
+        }
+        adapter.submitList(daftarBahan)
+    }
 
-        val gestureDetector = GestureDetector(
-            requireContext(),
-            object : GestureDetector.SimpleOnGestureListener() {
-                override fun onDoubleTap(e: MotionEvent): Boolean {
-                    val pos = lvBahan.pointToPosition(e.x.toInt(), e.y.toInt())
-                    if (pos != ListView.INVALID_POSITION) showActionDialog(pos)
-                    return true
-                }
-            })
-
-        lvBahan.setOnTouchListener { _, event ->
-            gestureDetector.onTouchEvent(event)
-            false
+    private fun addToCart(bahan: Bahan) {
+        val cartItems: MutableList<Bahan> = prefs.getList(Prefs.KEY_CART, Bahan::class.java)
+        if (!cartItems.any { it.nama == bahan.nama }) {
+            cartItems.add(bahan)
+            prefs.saveList(Prefs.KEY_CART, cartItems)
+            Toast.makeText(requireContext(), "${bahan.nama} ditambahkan ke keranjang", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(requireContext(), "${bahan.nama} sudah ada di keranjang", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun showAddDialog() {
-        val etName = EditText(requireContext())
-        etName.hint = "Nama Bahan"
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_tambah_bahan, null)
+        val etNamaBahan = dialogView.findViewById<EditText>(R.id.etNamaBahan)
+        val etImageUrl = dialogView.findViewById<EditText>(R.id.etImageUrl)
 
         AlertDialog.Builder(requireContext())
             .setTitle("Tambah Bahan")
-            .setView(etName)
-            .setPositiveButton("Simpan") { _, _ ->
-                val name = etName.text.toString().trim()
-                if (name.isNotEmpty()) {
-                    showCategoryDialog { cat ->
-                        data.add("$name ($cat)")
-                        adapter.notifyDataSetChanged()
-                    }
+            .setView(dialogView)
+            .setPositiveButton("Simpan") { dialog, _ ->
+                val nama = etNamaBahan.text.toString().trim()
+                val imageUrl = etImageUrl.text.toString().trim()
+                if (nama.isNotEmpty()) {
+                    val newBahan = Bahan(nama, imageUrl)
+                    addBahan(newBahan)
                 }
+                dialog.dismiss()
             }
             .setNegativeButton("Batal", null)
             .show()
     }
 
-    private fun showActionDialog(position: Int) {
-        val selected = data[position]
-        val options = arrayOf("Hapus", "Ganti Kategori")
-
-        AlertDialog.Builder(requireContext())
-            .setTitle(selected)
-            .setItems(options) { dialog, which ->
-                when (which) {
-                    0 -> { data.removeAt(position); adapter.notifyDataSetChanged() }
-                    1 -> changeCategory(position)
-                }
-                dialog.dismiss()
-            }
-            .show()
-    }
-
-    private fun changeCategory(position: Int) {
-        showCategoryDialog { cat ->
-            val nameOnly = data[position].substringBefore(" (")
-            data[position] = "$nameOnly ($cat)"
-            adapter.notifyDataSetChanged()
-        }
-    }
-
-    private fun showCategoryDialog(onSelected: (String) -> Unit) {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Pilih Kategori")
-            .setItems(categories) { d, which ->
-                onSelected(categories[which])
-                d.dismiss()
-            }
-            .show()
+    private fun addBahan(bahan: Bahan) {
+        daftarBahan.add(bahan)
+        prefs.saveList(Prefs.KEY_BAHAN, daftarBahan)
+        adapter.submitList(daftarBahan)
     }
 }

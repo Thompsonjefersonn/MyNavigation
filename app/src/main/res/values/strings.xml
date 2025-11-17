@@ -1,5 +1,30 @@
 <resources>
+    <!-- ... existing strings ... -->
+
     <string name="app_name">MyNavigation</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="gambar_bahan">Gambar Bahan</string>
+    <string name="tambah_ke_keranjang">Tambah ke keranjang</string>
+
+    <string-array name="initial_bahan_array">
+        <item>Gula</item>
+        <item>Tepung</item>
+        <item>Telur</item>
+        <item>Minyak Goreng</item>
+        <item>Susu</item>
+        <item>Garam</item>
+        <item>Lada</item>
+        <item>Bawang Merah</item>
+        <item>Bawang Putih</item>
+        <item>Cabai</item>
+        <item>Tomat</item>
+        <item>Wortel</item>
+        <item>Kentang</item>
+        <item>Ayam</item>
+        <item>Ikan</item>
+        <item>Keju</item>
+        <item>Roti</item>
+        <item>Kecap Manis</item>
+        <item>Saus Tomat</item>
+        <item>Margarin</item>
+    </string-array>
 </resources>

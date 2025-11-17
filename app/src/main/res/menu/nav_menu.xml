@@ -24,6 +24,11 @@
         android:icon="@drawable/baseline_menu_book_24"
         android:title="MENU"/>
 
+    <item
+        android:id="@+id/cartFragment"
+        android:icon="@drawable/ic_shopping_cart"
+        android:title="KERANJANG" />
+
     <item android:title="CONFIDENTIAL">
         <menu>
             <group android:checkableBehavior="single">
